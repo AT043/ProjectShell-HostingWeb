@@ -1,7 +1,31 @@
 #!/bin/bash
 
 echo "update repo..."
-sudo apt-get update
+#sudo apt-get update
+
+echo "install bind dnsutils..."
+sudo apt-get install bind9 dnsutils
+echo "Ganti ip pada file domain, ip, dan named.conf.default-zones sesuai ip masing2"
+echo "ganti juga ip di resolv.conf"
+sleep 10s
+echo ";..............;"
+echo "sudah ganti?"
+echo "1. sudah"
+echo "2. belum"
+read jawab
+
+if [ $jawab -eq 1 ]; then
+echo "lanjut...."
+else 
+exit
+fi
+
+sudo cp domain  /etc/bind/domain
+sudo cp ip /etc/bind/ip
+sudo rm /etc/bind/named.conf.default-zones
+sudo cp named.conf.default-zones /etc/bind/
+sudo rm /etc/resolv.conf
+sudo cp resolv.conf /etc/resolv.conf
 
 echo "install apache2.."
 sudo apt-get install apache2

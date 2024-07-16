@@ -1,0 +1,15 @@
+;
+; BIND data file for local loopback interface
+;
+$TTL	604800
+@	IN	SOA	nao.net. root.nao.net. (
+			      2		; Serial
+			 604800		; Refresh
+			  86400		; Retry
+			2419200		; Expire
+			 604800 )	; Negative Cache TTL
+;
+@	IN	NS	nao.net.
+@	IN	A	192.168.97.74
+www	IN	A	192.168.97.74
+pma	IN	A	192.168.97.74
