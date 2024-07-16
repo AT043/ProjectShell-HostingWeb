@@ -50,5 +50,16 @@ sudo mv config.inc.php phpmyadmin/
 cd phpmyadmin/
 sudo chown www-data:www-data -R /var/www/html/phpmyadmin/
 
+echo "atur2 dns"
+sudo mkdir -p /var/www/html/nao
+sudo cp index.html /var/www/html/nao/
+
+sudo a2dissite 000-default.conf
+sudo cp nao.net.conf /etc/apache2/sites-available/
+sudo cp pma.nao.net.conf /etc/apache2/sites-available/
+
+sudo a2ensite nao.net.conf
+sudo a2ensite pma.nao.net.conf
+
 echo "end.."
 
