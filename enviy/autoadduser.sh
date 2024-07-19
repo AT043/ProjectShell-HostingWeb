@@ -30,7 +30,7 @@ create_dns_entry() {
     sudo service named restart
 }
 
-# Function to create Apache configuration for the subdomain
+# Funsi untuk konfigurasi host di Apache 
 create_apache_vhost() {
     local username=$1
     local config_file="${APACHE_SITES_AVAILABLE}/${username}.${DOMAIN}.conf"
@@ -61,7 +61,6 @@ EOF
     sudo service apache2 restart
 }
 
-# Function to create a system user for FTP access
 # Fungsi create user baru untuk akses FTP
 create_ftp_user() {
     local username=$1
@@ -82,7 +81,6 @@ create_ftp_user() {
     echo "Password: ${password}"
 }
 
-# Function to create a MySQL database and user
 # Fungsi untuk membuat database MySQL user
 create_mysql_db_user() {
     local username=$1
