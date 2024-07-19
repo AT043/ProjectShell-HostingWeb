@@ -36,17 +36,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($result->num_rows > 0) {
         // Username dan Email telah digunakan
-        echo "Username or email already used. Please choose a different username or email.";
-		echo "Username atau email telah digunakan, silahkan gunakan yang lain.."
+		echo "Username atau email telah digunakan, silahkan gunakan yang lain..";
     } else {
         // Generate password
         $password = generatePassword();
+        
+        //Get tanggal submit
+        $tgl_regis = date('Y-m-d H:i:s');
 
         // Insert data ke database
-        $sql = "INSERT INTO nao_user (username, email, password) VALUES ('$username', '$email', '$password')";
+        $sql = "INSERT INTO nao_user (username, email, password, tgl_regis) VALUES ('$username', '$email', '$password', '$tgl_regis')";
 
         if ($conn->query($sql) === TRUE) {
-            echo "New record created successfully. Your password is: $password";
+			session_start();
+            
+            $_SESSION['username'] = $username;
+            $_SESSION['password'] = $password;
+            $_SESSION['email'] = $email;
+            $_SESSION['form_submitted'] = true;
+            
+            header("Location: registered.php");
+            exit();
+        
         } else {
             echo "Error: " . $sql . "<br>" . $conn->error;
         }

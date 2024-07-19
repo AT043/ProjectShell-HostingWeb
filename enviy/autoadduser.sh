@@ -79,6 +79,7 @@ create_ftp_user() {
     echo "FTP user created:"
     echo "Username: ${username}"
     echo "Password: ${password}"
+    sleep 5s
 }
 
 # Fungsi untuk membuat database MySQL user
@@ -97,6 +98,7 @@ create_mysql_db_user() {
     echo "Database: ${db_name}"
     echo "Username: ${username}"
     echo "Password: ${password}"
+    sleep 5s
 }
 
 # Cek count_user.txt jika tidak ada buat filenya
