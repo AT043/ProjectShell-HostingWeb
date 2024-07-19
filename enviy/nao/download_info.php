@@ -2,7 +2,7 @@
 session_start();
 
 // Check if download content is set
-if (isset($_SESSION['download_content']) || !isset($_SESSION['form_submitted']) || $_SESSION['form_submitted'] == true || !isset($_SESSION['download_content'])) {
+if (isset($_SESSION['download_content'])) {
     $content = $_SESSION['download_content'];
     $filename = "user_info.txt";
 
@@ -15,6 +15,6 @@ if (isset($_SESSION['download_content']) || !isset($_SESSION['form_submitted']) 
     echo $content;
     exit();
 } else {
-    echo "User belum terdaftar!.";
+    echo "User belum terdaftar! Silahkan daftar di http://nao.net.";
 }
 ?>

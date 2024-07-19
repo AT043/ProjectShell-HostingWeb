@@ -12,6 +12,7 @@ BIND_ZONE_FILE="/etc/bind/domain"
 APACHE_SITES_AVAILABLE="/etc/apache2/sites-available"
 APACHE_SITES_ENABLED="/etc/apache2/sites-enabled"
 
+while true; do
 # Fungsi untuk menghitung jumlah user yang telah terdaftar pada database
 get_user_count() {
     mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASS" -D "$DB_NAME" -se "SELECT COUNT(*) FROM $TABLE_NAME;"
@@ -134,3 +135,6 @@ else
 fi
 
 echo $user
+
+sleep 10s
+done 

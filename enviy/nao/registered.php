@@ -2,8 +2,8 @@
 session_start();
 
 // Check if session variables are set
-if (!isset($_SESSION['username']) || !isset($_SESSION['password']) || !isset($_SESSION['email']) || !isset($_SESSION['form_submitted']) || $_SESSION['form_submitted'] == true) {
-    echo "No user information found.";
+if (!isset($_SESSION['username']) || !isset($_SESSION['password']) || !isset($_SESSION['email'])) {
+    echo "UPs.. Anda belum terdaftar.. silahkan daftar di http://nao.net";
     exit();
 }
 
@@ -35,7 +35,7 @@ $_SESSION['download_content'] = $content;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Information</title>
+    <title>Informasi Hosting</title>
     <style>
         body, html {
             height: 100%;
