@@ -19,13 +19,6 @@ while true; do
     mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASS" -D "$DB_NAME" -se "SELECT username FROM $TABLE_NAME;"
   }
 
-  #Fungsi Untuk ambil username dan password dari database
-  #_user_data() {
-  #  local last_usernames=("$@")
-  #  local query="SELECT username, password FROM $TABLE_NAME WHERE username NOT IN ('${last_usernames[*]}');"
-  #  mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASS" -D "$DB_NAME" -se "$query"
-  #}
-
   #Fungsi untuk Create entri DNS di BIND9
   create_dns_entry() {
     local username=$1
@@ -39,8 +32,8 @@ while true; do
     sed -i "/${username}    IN      A      192.168.97.73/d" "$BIND_ZONE_FILE"
     sudo service named restart
   }
-
-  #Fungsi untuk add konfigurasi apache virtual host
+  
+    #Fungsi untuk add konfigurasi apache virtual host
   create_apache_vhost() {
     local username=$1
     local config_file="${APACHE_SITES_AVAILABLE}/${username}.${DOMAIN}.conf"
@@ -96,7 +89,7 @@ EOF
     sudo chmod -R 755 /var/www/html/${username}
 
     #Tampilkan hasil create user (password dan usernamenya) di server
-    echo "FTP user created:"
+    echo "Direktori user dan FTP berhasil:"
     echo "Username: ${username}"
     echo "Password: ${password}"
     sleep 5s
@@ -169,8 +162,7 @@ EOF
   if [ ${#new_users[@]} -gt 0 ]; then
     for username in "${new_users[@]}"; do
       password=$(mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASS" -D "$DB_NAME" -se "SELECT password FROM $TABLE_NAME WHERE username='$username';")
-      echo "Configuring DNS, Apache, FTP, and MySQL for ${username}.${DOMAIN}"
-      echo "${username}.${DOMAIN} Sedang diproses..."
+      echo "DNS, Apache, FTP, and MySQL ${username}.${DOMAIN} Sedang diproses..."
       sleep 5s
       create_dns_entry "$username"
       create_apache_vhost "$username"
@@ -180,7 +172,7 @@ EOF
     #Update data username dengan data terbaru
     echo "$current_usernames" | tr ' ' '\n' > "$LAST_USERNAMES_FILE"
   else
-    echo "no new data"
+    echo "tidak ada user baru"
     sleep 5s
   fi
 
@@ -196,15 +188,14 @@ EOF
   #Hapus segala akses beserta direktory, permission, dan konfigurasinya
   if [ ${#deleted_users[@]} -gt 0 ]; then
     for username in "${deleted_users[@]}"; do
-      echo "User ${username} has been deleted from the database. Removing associated resources..."
+      echo "${username} telah dihapus dari database. Menghapus resource..."
       delete_ftp_user "$username"
       delete_mysql_db_user "$username"
       remove_dns_entry "$username"
       remove_apache_vhost "$username"
     done
   else
-	echo "No user Deleted"
-	sleep 5s
+	sleep 1s
   fi
 
   rm -f "$current_usernames_file"

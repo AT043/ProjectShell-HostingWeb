@@ -1,7 +1,10 @@
 #!/bin/bash
 
 echo "update repo..."
-#sudo apt-get update
+sudo apt-get update
+
+echo "download file2 untuk instalasi..."
+sudo git clone https://github.com/at043/projectShell1.git
 
 echo "install bind dnsutils..."
 sudo apt-get install bind9 dnsutils
@@ -60,6 +63,9 @@ sudo cp pma.nao.net.conf /etc/apache2/sites-available/
 
 sudo a2ensite nao.net.conf
 sudo a2ensite pma.nao.net.conf
+
+echo "Install ftp..."
+sudo apt-get install vsftpd
 
 echo "end.."
 
