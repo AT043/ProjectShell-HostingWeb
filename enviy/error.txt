@@ -1,0 +1,32 @@
+Configuring DNS, Apache, and FTP for test.nao.net
+test.nao.net Sedang diprosese...
+Stopping domain name service...: namedwaiting for pid 1806 to die
+.
+Starting domain name service...: named.
+Site test.nao.net already enabled
+Restarting Apache httpd web server: apache2AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 127.0.0.1. Set the 'ServerName' directive globally to suppress this message
+.
+useradd: warning: the home directory /var/www/html/test already exists.
+useradd: Not copying any file from skel directory into it.
+FTP user created:
+Username: test
+Password: test123#
+ERROR 1007 (HY000) at line 1: Can't create database 'test_db'; database exists
+ERROR 1396 (HY000) at line 1: Operation CREATE USER failed for 'test'@'localhost'
+MySQL database and user created:
+Database: test_db
+Username: test
+Password: test123#
+autoadduser.sh: line 168: get_all_usernames: command not found
+User 1 has been deleted from the database. Removing associated resources...
+userdel: user '1' does not exist
+autoadduser.sh: line 176: remove_dns_entry: command not found
+ERROR: Site 1.nao.net does not exist!
+Restarting Apache httpd web server: apache2AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 127.0.0.1. Set the 'ServerName' directive globally to suppress this message
+.
+autoadduser.sh: line 149: [: : integer expression expected
+autoadduser.sh: line 168: get_all_usernames: command not found
+autoadduser.sh: line 149: [: : integer expression expected
+autoadduser.sh: line 168: get_all_usernames: command not found
+autoadduser.sh: line 149: [: : integer expression expected
+autoadduser.sh: line 168: get_all_usernames: command not found
