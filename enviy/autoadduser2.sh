@@ -14,33 +14,33 @@ APACHE_SITES_ENABLED="/etc/apache2/sites-enabled"
 FTP_HOME_DIR="/var/www/html"
 
 while true; do
-  # Function to get all current usernames
+  # Fungsi untuk ambil semua username di database
   get_all_usernames() {
     mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASS" -D "$DB_NAME" -se "SELECT username FROM $TABLE_NAME;"
   }
 
-  # Function to get the latest user data (username and password)
-  get_new_user_data() {
-    local last_usernames=("$@")
-    local query="SELECT username, password FROM $TABLE_NAME WHERE username NOT IN ('${last_usernames[*]}');"
-    mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASS" -D "$DB_NAME" -se "$query"
-  }
+  #Fungsi Untuk ambil username dan password dari database
+  #_user_data() {
+  #  local last_usernames=("$@")
+  #  local query="SELECT username, password FROM $TABLE_NAME WHERE username NOT IN ('${last_usernames[*]}');"
+  #  mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASS" -D "$DB_NAME" -se "$query"
+  #}
 
-  # Function to create DNS entry in BIND
+  #Fungsi untuk Create entri DNS di BIND9
   create_dns_entry() {
     local username=$1
     echo "${username}    IN      A      192.168.97.73" >> "$BIND_ZONE_FILE"
     sudo service named restart
   }
 
-  # Function to remove DNS entry from BIND
+  #Fungsi untuk menghapus entri DNS dari bind9
   remove_dns_entry() {
     local username=$1
     sed -i "/${username}    IN      A      192.168.97.73/d" "$BIND_ZONE_FILE"
     sudo service named restart
   }
 
-  # Function to configure Apache host
+  #Fungsi untuk add konfigurasi apache virtual host
   create_apache_vhost() {
     local username=$1
     local config_file="${APACHE_SITES_AVAILABLE}/${username}.${DOMAIN}.conf"
@@ -60,9 +60,8 @@ while true; do
 </VirtualHost>
 EOF
 
-    # Create directory for user
+    #Buat Direktori untuk web user
     sudo mkdir -p /var/www/html/${username}
-    sudo chown -R www-data:www-data /var/www/html/${username}
     sudo echo "<html><body><h1>Welcome to ${username}.${DOMAIN}</h1></body></html>" > /var/www/html/${username}/index.html
 
     sudo ln -s "${config_file}" "${APACHE_SITES_ENABLED}/${username}.${DOMAIN}.conf"
@@ -71,7 +70,7 @@ EOF
     sudo service apache2 restart
   }
 
-  # Function to remove Apache configuration
+  #Fungsi remove konfigurasi apache user
   remove_apache_vhost() {
     local username=$1
     local config_file="${APACHE_SITES_AVAILABLE}/${username}.${DOMAIN}.conf"
@@ -83,34 +82,34 @@ EOF
     sudo service apache2 restart
   }
 
-  # Function to create a system user for FTP access
+  #Fungsi untuk add user baru ke server untuk akses FTP dan direktori
   create_ftp_user() {
     local username=$1
     local password=$2
 
-    # Create the user with /var/www/html/${username} as home directory
+    #Buat user baru di server dengan direktori home di /var/www/html/usernaem
     sudo useradd -m -d /var/www/html/${username} -s /usr/sbin/nologin "$username"
     echo "${username}:${password}" | sudo chpasswd
 
-    # Set ownership and permissions
+    #Set permission dan ownership direktory untuk user
     sudo chown -R ${username}:${username} /var/www/html/${username}
     sudo chmod -R 755 /var/www/html/${username}
 
-    # Display the created user's credentials (could be logged instead)
+    #Tampilkan hasil create user (password dan usernamenya) di server
     echo "FTP user created:"
     echo "Username: ${username}"
     echo "Password: ${password}"
     sleep 5s
   }
 
-  # Function to delete an FTP user
+  #Fungsi buat delete user dan direktori ftpnya
   delete_ftp_user() {
     local username=$1
     sudo userdel -r "$username"
     sudo rm -rf "${FTP_HOME_DIR}/${username}"
   }
 
-  # Function to create a MySQL database and user
+  #Fungsi untuk create database MySQL user
   create_mysql_db_user() {
     local username=$1
     local password=$2
@@ -121,15 +120,15 @@ EOF
     mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASS" -se "GRANT ALL PRIVILEGES ON ${db_name}.* TO '${username}'@'localhost';"
     mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASS" -se "FLUSH PRIVILEGES;"
 
-    # Display the created user's credentials
-    echo "MySQL database and user created:"
+    #Tampilkan hasil create db mysql untuk user
+    echo "db MySQL untuk user berhasil dibuat..."
     echo "Database: ${db_name}"
     echo "Username: ${username}"
     echo "Password: ${password}"
     sleep 5s
   }
 
-  # Function to delete a MySQL user and database
+  #Fungsi untuk hapus database mysql user
   delete_mysql_db_user() {
     local username=$1
     local db_name="${username}_db"
@@ -139,24 +138,25 @@ EOF
     mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASS" -se "FLUSH PRIVILEGES;"
   }
 
-  # Initialize count file if it doesn't exist
+  
+  #Buat file last_username untuk tampung data username jika blm ada
   if [ ! -f "$LAST_USERNAMES_FILE" ]; then
     touch "$LAST_USERNAMES_FILE"
   fi
 
-  # Get current usernames from database and store them in a temporary file
+  #Get data username_terakhir dari db dan masukkan ke temp file
   current_usernames=$(get_all_usernames)
   current_usernames_file=$(mktemp)
   echo "$current_usernames" > "$current_usernames_file"
 
-  # Read last usernames from file
+  #Cek last_username
   if [ -s "$LAST_USERNAMES_FILE" ]; then
     readarray -t last_usernames < "$LAST_USERNAMES_FILE"
   else
     last_usernames=()
   fi
 
-  # Determine new users
+  #Cek apakah ada user baru
   new_users=()
   for username in $current_usernames; do
     if ! [[ " ${last_usernames[@]} " =~ " $username " ]]; then
@@ -164,7 +164,8 @@ EOF
     fi
   done
 
-  # Handle new users
+  #Tambah user
+  #Kondisi jika ada user baru jalankan fungsi dns_entry; apache_vhost; ftp_user; dan mysql_db_user
   if [ ${#new_users[@]} -gt 0 ]; then
     for username in "${new_users[@]}"; do
       password=$(mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASS" -D "$DB_NAME" -se "SELECT password FROM $TABLE_NAME WHERE username='$username';")
@@ -176,14 +177,14 @@ EOF
       create_ftp_user "$username" "$password"
       create_mysql_db_user "$username" "$password"
     done
-    # Update the last known usernames file with the current usernames
+    #Update data username dengan data terbaru
     echo "$current_usernames" | tr ' ' '\n' > "$LAST_USERNAMES_FILE"
   else
     echo "no new data"
     sleep 5s
   fi
 
-  # Determine deleted users
+  #cari username mana yang tlah dihapus dari db
   deleted_users=()
   for username in "${last_usernames[@]}"; do
     if ! grep -q "$username" "$current_usernames_file"; then
@@ -191,7 +192,8 @@ EOF
     fi
   done
 
-  # Handle deleted users
+  #Kondisi jika user dihapus dari database
+  #Hapus segala akses beserta direktory, permission, dan konfigurasinya
   if [ ${#deleted_users[@]} -gt 0 ]; then
     for username in "${deleted_users[@]}"; do
       echo "User ${username} has been deleted from the database. Removing associated resources..."
@@ -200,6 +202,9 @@ EOF
       remove_dns_entry "$username"
       remove_apache_vhost "$username"
     done
+  else
+	echo "No user Deleted"
+	sleep 5s
   fi
 
   rm -f "$current_usernames_file"
