@@ -6,29 +6,22 @@ sudo apt-get update
 echo "download file2 untuk instalasi..."
 sudo git clone https://github.com/at043/projectShell1.git
 
+cd projectShell1/enviy
+
 echo "install bind dnsutils..."
 sudo apt-get install bind9 dnsutils
 echo "Ganti ip pada file domain, ip, dan named.conf.default-zones sesuai ip masing2"
 echo "ganti juga ip di resolv.conf"
 sleep 10s
-echo ";..............;"
-echo "sudah ganti?"
-echo "1. sudah"
-echo "2. belum"
-read jawab
 
-if [ $jawab -eq 1 ]; then
-echo "lanjut...."
-else 
-exit
-fi
-
+sudo cp -r nao /var/www
 sudo cp domain  /etc/bind/domain
 sudo cp ip /etc/bind/ip
 sudo rm /etc/bind/named.conf.default-zones
 sudo cp named.conf.default-zones /etc/bind/
 sudo rm /etc/resolv.conf
-sudo cp resolv.conf /etc/resolv.conf
+sudo cp resolv.conf /etc
+sudo service named restart
 
 echo "install apache2.."
 sudo apt-get install apache2
@@ -42,30 +35,31 @@ sudo apt-get install mariadb-server -y
 echo "install php..."
 sudo apt-get install php php-zip php-intl php-curl php-mbstring php-mysql unzip -y
 
-echo "download phpmyadmin.."
-sudo mv config.inc.php /var/www/html
-cd /var/www/html
-sudo wget https://files.phpmyadmin.net/phpMyAdmin/5.2.1/phpMyAdmin-5.2.1-all-languages.zip
-sudo unzip phpMyAdmin-5.2.1-all-languages.zip
-sudo mv phpMyAdmin-5.2.1-all-languages phpmyadmin
-sudo rm phpMyAdmin-5.2.1-all-languages.zip
-sudo mv config.inc.php phpmyadmin/
-cd phpmyadmin/
-sudo chown www-data:www-data -R /var/www/html/phpmyadmin/
+echo "setting phpmyadmin.."
+sudo cp -r nao/phpmyadmin /var/www/nao
+
+echo "setting ftp filemanager"
+sudo cp -r nao/mftp /var/www/nao
 
 echo "atur2 dns"
-sudo mkdir -p /var/www/html/nao
-sudo cp index.html /var/www/html/nao/
 
 sudo a2dissite 000-default.conf
 sudo cp nao.net.conf /etc/apache2/sites-available/
 sudo cp pma.nao.net.conf /etc/apache2/sites-available/
+sudo cp file.nao.net.conf /etc/apache2/sites-available/
 
 sudo a2ensite nao.net.conf
 sudo a2ensite pma.nao.net.conf
+sudo a2ensite file.nao.net.conf
+sudo service apache2 restart
 
 echo "Install ftp..."
 sudo apt-get install vsftpd
 
-echo "end.."
+sudo rm /etc/vsftpd.conf
+sudo cp vsftpd.conf /etc/
+sudo systemctl start vsfptd
 
+echo ""
+
+echo "end.."

@@ -1,0 +1,229 @@
+* {
+    margin: auto 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: azure;
+    font-family: 'Courier-Sans', Courier, sans-serif;
+    font-size: 24px;
+    color: #000;
+}
+
+header {
+    display: inline;
+}
+
+.jumbotron {
+    padding: 60px;
+    background-color: azure;
+    font-size: 60px;
+    color: #000;
+    display: flex;
+    justify-content: center;
+    border-bottom: 1px solid #000;
+    
+}
+
+.typing-effect p{
+    color: #000;
+    font-family: monospace;
+    overflow: hidden; 
+    border-right: .05em solid rgb(34, 33, 33); 
+    white-space: nowrap; 
+    margin: 0 auto; 
+    letter-spacing: .15em; 
+    animation: 
+      typing 3.5s steps(10, end),
+      blink-caret .5s step-end infinite;
+}
+  
+ 
+@keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+}
+  
+@keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color: rgb(58, 57, 56) }
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+    position: sticky;
+    top: 0;
+    background-color: azure;
+    z-index: 1;
+    color: #000;
+}
+
+.nav-menu {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-item {
+    margin-left: 5rem;
+}
+
+.nav-link{
+    font-size: 1.6rem;
+    font-weight: 400;
+    color: #000;
+}
+
+.nav-link:hover{
+    color: #fff;
+    background-color: #000;
+    font-weight: bold;
+}
+
+.nav-logo {
+    font-size: 2.1rem;
+    font-weight: bold;
+    color: #000;
+}
+
+.nav-logo:hover {
+    color:#fff;
+    background-color: #000;
+    font-weight: bold;
+}
+
+nav a {
+    text-decoration: none;
+}
+
+nav li {
+    list-style-type: none;
+}
+
+label, input, select, textarea {
+    font-size: 20px;
+    display:list-item;
+}
+input, select, textarea {
+    margin-bottom: 10px;
+}
+
+.btn {
+    background-color: blue;
+    text-decoration: none;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 13px;
+    margin-top: 10px;
+}
+.btn:hover {
+    background-color: blueviolet;
+}
+.btn-red {
+    background-color: red;
+    text-decoration: none;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 13px;
+    margin-top: 10px;
+}
+.btn-red:hover {
+    background-color: brown;
+}
+
+.btn-green {
+    background-color: lime;
+    text-decoration: none;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 5px;
+    font-size: 20px;
+    margin-top: 10px;
+    box-shadow: 2px 6px #000;
+}
+.btn-green:hover {
+    background-color: greenyellow;
+    box-shadow: 2px 4px #000;
+}
+
+table {
+    margin-top: 30px;
+    border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 30px;
+}
+table, th, td {
+    border: 2px solid black;
+    width: 70%;
+}
+
+th, td {
+    padding: 20px;
+    text-align: center;
+}
+
+footer {
+    background-color: azure;
+    padding: 20px;
+    margin: auto 0;
+    border-top: 1px solid #000;
+    bottom: 0;
+}
+
+footer p {
+    font-weight: bold;
+    font-size: 32px;
+    color: #000;
+    text-align: center;
+}
+
+footer a {
+    text-decoration: none;
+    color: white;
+}
+
+
+@media only screen and (max-width: 768px) {
+    
+
+    .nav-menu {
+        position: fixed;
+        left: -100%;
+        top: 0;
+        flex-direction: column;
+        background-color: azure;
+        width: 100%;
+        border-radius: 10px;
+        text-align: center;
+        transition: 0.3s;
+    }
+
+    nav {
+        z-index: 1;
+    }
+
+    .nav-menu.active {
+        left: 0;
+    }
+
+    .nav-item {
+        margin: 2.5rem 0;
+    }
+
+    body {
+        font-size: 20px;
+    }
+
+    table, th, td {
+        border: 2px solid black;
+        width: 50%;
+    }
+}
