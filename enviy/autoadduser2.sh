@@ -11,7 +11,7 @@ DOMAIN="nao.net"
 BIND_ZONE_FILE="/etc/bind/domain"
 APACHE_SITES_AVAILABLE="/etc/apache2/sites-available"
 APACHE_SITES_ENABLED="/etc/apache2/sites-enabled"
-FTP_HOME_DIR="/var/www/html"
+FTP_HOME_DIR="/var/www/nao"
 
 while true; do
   # Fungsi untuk ambil semua username di database
@@ -22,14 +22,14 @@ while true; do
   #Fungsi untuk Create entri DNS di BIND9
   create_dns_entry() {
     local username=$1
-    echo "${username}    IN      A      192.168.97.73" >> "$BIND_ZONE_FILE"
+    echo "${username}    IN      A      192.168.79.7" >> "$BIND_ZONE_FILE"
     sudo service named restart
   }
 
   #Fungsi untuk menghapus entri DNS dari bind9
   remove_dns_entry() {
     local username=$1
-    sed -i "/${username}    IN      A      192.168.97.73/d" "$BIND_ZONE_FILE"
+    sed -i "/${username}    IN      A      192.168.79.7/d" "$BIND_ZONE_FILE"
     sudo service named restart
   }
   
@@ -41,12 +41,12 @@ while true; do
     cat <<EOF > "$config_file"
 <VirtualHost *:80>
     ServerName ${username}.${DOMAIN}
-    DocumentRoot /var/www/html/${username}
+    DocumentRoot /var/www/nao/${username}
     ErrorLog \${APACHE_LOG_DIR}/${username}_error.log
     CustomLog \${APACHE_LOG_DIR}/${username}_access.log combined
 
-    <Directory /var/www/html/${username}>
-        Options Indexes FollowSymLinks
+    <Directory /var/www/nao/${username}>
+        Options -Indexes +FollowSymLinks
         AllowOverride All
         Require all granted
     </Directory>
@@ -54,8 +54,8 @@ while true; do
 EOF
 
     #Buat Direktori untuk web user
-    sudo mkdir -p /var/www/html/${username}
-    sudo echo "<html><body><h1>Welcome to ${username}.${DOMAIN}</h1></body></html>" > /var/www/html/${username}/index.html
+    sudo mkdir -p /var/www/nao/${username}
+    sudo echo "<html><header><title>${username}.${DOMAIN}</title></header><body><h1>Welcome to ${username}.${DOMAIN}</h1><hr></body></html>" > /var/www/nao/${username}/index.html
 
     sudo ln -s "${config_file}" "${APACHE_SITES_ENABLED}/${username}.${DOMAIN}.conf"
 
@@ -71,7 +71,7 @@ EOF
     sudo a2dissite "${username}.${DOMAIN}.conf"
     sudo rm -f "${config_file}"
     sudo rm -f "${APACHE_SITES_ENABLED}/${username}.${DOMAIN}.conf"
-    sudo rm -rf "/var/www/html/${username}"
+    sudo rm -rf "/var/www/nao/${username}"
     sudo service apache2 restart
   }
 
@@ -80,14 +80,15 @@ EOF
     local username=$1
     local password=$2
 
-    #Buat user baru di server dengan direktori home di /var/www/html/usernaem
-    sudo useradd -m -d /var/www/html/${username} -s /usr/sbin/nologin "$username"
+    #Buat user baru di server dengan direktori home di /var/www/nao/username
+    sudo useradd -m -d /var/www/nao/${username} -s /usr/sbin/nologin "$username"
     echo "${username}:${password}" | sudo chpasswd
 
     #Set permission dan ownership direktory untuk user
-    sudo chown -R ${username}:${username} /var/www/html/${username}
-    sudo chmod -R 755 /var/www/html/${username}
-
+    sudo chown -R ${username}:${username} /var/www/nao/${username}
+    sudo chmod -R 755 /var/www/nao/${username}
+	
+    
     #Tampilkan hasil create user (password dan usernamenya) di server
     echo "Direktori user dan FTP berhasil:"
     echo "Username: ${username}"
@@ -194,6 +195,7 @@ EOF
       remove_dns_entry "$username"
       remove_apache_vhost "$username"
     done
+    echo "$current_usernames" | tr ' ' '\n' > "$LAST_USERNAMES_FILE" 
   else
 	sleep 1s
   fi
