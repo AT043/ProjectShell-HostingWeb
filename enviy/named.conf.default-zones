@@ -22,7 +22,7 @@ zone "nao.net" {
 	file "/etc/bind/domain";
 };
 
-zone "97.in-addr.arpa" {
+zone "79.168.192.in-addr.arpa" {
 	type master;
 	file "/etc/bind/ip";
 };

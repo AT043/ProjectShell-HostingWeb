@@ -10,6 +10,7 @@ $TTL	604800
 			 604800 )	; Negative Cache TTL
 ;
 @	IN	NS	nao.net.
-74	IN	PTR	nao.net.
-74	IN	PTR	www.nao.net.
-74	IN	PTR	pma.nao.net.
+7	IN	PTR	nao.net.
+7	IN	PTR	www.nao.net.
+7	IN	PTR	pma.nao.net.
+7	IN	PTR	file.nao.net.

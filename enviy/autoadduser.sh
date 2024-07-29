@@ -14,6 +14,7 @@ APACHE_SITES_ENABLED="/etc/apache2/sites-enabled"
 FTP_HOME_DIR="/var/www/nao"
 
 while true; do
+  echo muter;
   # Fungsi untuk ambil semua username di database
   get_all_usernames() {
     mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASS" -D "$DB_NAME" -se "SELECT username FROM $TABLE_NAME;"
