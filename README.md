@@ -1,5 +1,5 @@
 # TUGAS AKHIR PPJ
-** Shared Hosting berdasarkan https://serv00.net **
+** Nao! Shared Hosting berdasarkan https://serv00.net **
 * gunakan file install.sh untuk menginstall service2nya
 * autoadduser.sh untuk otomasi add user
 ## Anggota Kelompok 1:
